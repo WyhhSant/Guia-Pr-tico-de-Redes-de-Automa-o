@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia Visual de Redes para Automação</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // Paleta clara (pastéis)
+            'beige': '#f9f6f0',
+            'sand': '#e8d9c8',
+            'brown': '#a67c52',
+            'brown-dark': '#5e4634',
+            'sage': '#b7c9a8',
+            'sage-dark': '#8fa382',
+            // Paleta escura (dark mode)
+            'dark-bg': '#1e1b18',
+            'dark-card': '#2c2824',
+            'dark-border': '#3e3934',
+            'dark-text': '#e0d7cf',
+            'dark-accent': '#c7a17b', // marrom mais claro no dark
+            'dark-sage': '#7f9a7a',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Transições e efeitos */
+    .card-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -8px rgba(94, 70, 52, 0.25);
+    }
+    .dark .card-hover:hover {
+      box-shadow: 0 12px 24px -8px rgba(0,0,0,0.6);
+    }
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    /* Abas */
+    .tab-active {
+      background-color: #b7c9a8;
+      color: #5e4634;
+      box-shadow: 0 4px 12px rgba(94, 70, 52, 0.15);
+      border: 1px solid #b7c9a8;
+    }
+    .dark .tab-active {
+      background-color: #7f9a7a;
+      color: #1e1b18;
+      border-color: #7f9a7a;
+    }
+    .tab-inactive {
+      background-color: #e8d9c8;
+      color: #5e4634;
+      border: 1px solid #e8d9c8;
+    }
+    .dark .tab-inactive {
+      background-color: #3e3934;
+      color: #e0d7cf;
+      border-color: #3e3934;
+    }
+    .tab-inactive:hover {
+      background-color: #d4c4b0;
+    }
+    .dark .tab-inactive:hover {
+      background-color: #4a443e;
+    }
+    /* Botão voltar ao topo */
+    #btnTopo {
+      transition: opacity 0.3s;
+    }
+    /* Tabela comparativa */
+    .comparacao-table th, .comparacao-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e8d9c8;
+    }
+    .dark .comparacao-table th, .dark .comparacao-table td {
+      border-bottom-color: #3e3934;
+    }
+  </style>
+</head>
+<body class="bg-beige dark:bg-dark-bg text-brown-dark dark:text-dark-text font-sans antialiased transition-colors duration-300">
+
+  <!-- ========== CABEÇALHO COM TOGGLE DARK MODE ========== -->
+  <header class="bg-gradient-to-r from-sand via-beige to-sand dark:from-dark-card dark:via-dark-bg dark:to-dark-card p-6 md:p-10 shadow-md border-b border-sand dark:border-dark-border">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between">
+      <div>
+        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-brown-dark dark:text-dark-accent">
+          ⚡ Guia Visual de Redes para Automação
+        </h1>
+        <p class="mt-3 text-lg md:text-xl text-brown-dark/80 dark:text-dark-text/80 max-w-3xl">
+          Entenda os meios de transmissão e as topologias que garantem comunicação confiável no chão de fábrica.
+        </p>
+      </div>
+      <!-- Toggle Dark Mode -->
+      <button id="darkToggle" class="mt-4 md:mt-0 px-4 py-2 bg-white dark:bg-dark-card border border-sand dark:border-dark-border rounded-full text-sm font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
+        <span id="darkIcon">🌙</span>
+        <span id="darkLabel">Modo escuro</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========== NAVEGAÇÃO POR ABAS ========== -->
+  <nav class="flex justify-center space-x-4 my-8 px-4" role="tablist">
+    <button id="tabCabos" role="tab" aria-selected="true"
+            class="tab-active px-6 py-3 rounded-full font-semibold text-sm md:text-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sage dark:focus:ring-dark-sage focus:ring-offset-2">
+      🔌 Cabos Industriais
+    </button>
+    <button id="tabTopologias" role="tab" aria-selected="false"
+            class="tab-inactive px-6 py-3 rounded-full font-semibold text-sm md:text-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sage dark:focus:ring-dark-sage focus:ring-offset-2">
+      🕸️ Topologias
+    </button>
+  </nav>
+
+  <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+  <main class="max-w-6xl mx-auto px-4 pb-16">
+
+    <!-- ----- Seção: Cabos Industriais ----- -->
+    <section id="sectionCabos" class="space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Cards mantidos iguais, apenas com classes dark -->
+        <article data-cabo="par-trancado"
+                 class="card-hover bg-white dark:bg-dark-card rounded-2xl p-6 shadow-md cursor-pointer border border-sand dark:border-dark-border hover:border-sage dark:hover:border-dark-sage"
+                 tabindex="0" aria-label="Saiba mais sobre Par Trançado">
+          <div class="text-4xl mb-3">🔌</div>
+          <h3 class="text-xl font-bold text-brown-dark dark:text-dark-accent">Par Trançado</h3>
+          <p class="text-brown-dark/70 dark:text-dark-text/70 text-sm mt-1">Cobre • RJ45 industrial • Até 100 m</p>
+          <span class="inline-block mt-4 text-sage-dark dark:text-dark-sage text-sm font-medium">Clique para detalhes →</span>
+        </article>
+        <article data-cabo="fibra-optica"
+                 class="card-hover bg-white dark:bg-dark-card rounded-2xl p-6 shadow-md cursor-pointer border border-sand dark:border-dark-border hover:border-sage dark:hover:border-dark-sage"
+                 tabindex="0" aria-label="Saiba mais sobre Fibra Óptica">
+          <div class="text-4xl mb-3">🔦</div>
+          <h3 class="text-xl font-bold text-brown-dark dark:text-dark-accent">Fibra Óptica</h3>
+          <p class="text-brown-dark/70 dark:text-dark-text/70 text-sm mt-1">Vidro/Plástico • Imune a EMI • Longas distâncias</p>
+          <span class="inline-block mt-4 text-sage-dark dark:text-dark-sage text-sm font-medium">Clique para detalhes →</span>
+        </article>
+        <article data-cabo="wireless"
+                 class="card-hover bg-white dark:bg-dark-card rounded-2xl p-6 shadow-md cursor-pointer border border-sand dark:border-dark-border hover:border-sage dark:hover:border-dark-sage"
+                 tabindex="0" aria-label="Saiba mais sobre Wireless">
+          <div class="text-4xl mb-3">📡</div>
+          <h3 class="text-xl font-bold text-brown-dark dark:text-dark-accent">Wireless</h3>
+          <p class="text-brown-dark/70 dark:text-dark-text/70 text-sm mt-1">Rádio • Wi‑Fi 6 / 5G privado • Mobilidade</p>
+          <span class="inline-block mt-4 text-sage-dark dark:text-dark-sage text-sm font-medium">Clique para detalhes →</span>
+        </article>
+      </div>
+
+      <!-- Painel de explicação dinâmica -->
+      <div id="explicacaoCabo" class="hidden fade-in bg-white dark:bg-dark-card rounded-2xl p-6 md:p-8 shadow-lg border-l-4 border-sage dark:border-dark-sage">
+        <div id="conteudoExplicacaoCabo" class="prose prose-brown dark:text-dark-text max-w-none"></div>
+      </div>
+
+      <!-- Tabela comparativa dos cabos (visível sempre na aba) -->
+      <div class="bg-white dark:bg-dark-card rounded-2xl p-6 shadow-md border border-sand dark:border-dark-border">
+        <h3 class="text-xl font-bold text-brown-dark dark:text-dark-accent mb-4">📊 Comparação rápida dos meios de transmissão</h3>
+        <div class="overflow-x-auto">
+          <table class="comparacao-table w-full text-sm text-left">
+            <thead class="bg-sand/50 dark:bg-dark-border/50">
+              <tr>
+                <th class="font-semibold">Característica</th>
+                <th class="font-semibold">Par Trançado</th>
+                <th class="font-semibold">Fibra Óptica</th>
+                <th class="font-semibold">Wireless</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Custo relativo</td><td>💰 Baixo</td><td>💰💰 Médio/Alto</td><td>💰💰 Médio</td></tr>
+              <tr><td>Distância máxima</td><td>100 m (cobre)</td><td>Até 40 km (monomodo)</td><td>~100 m (Wi‑Fi interno)</td></tr>
+              <tr><td>Imunidade a EMI</td><td>Média (blindado)</td><td>Total</td><td>Baixa (suscetível)</td></tr>
+              <tr><td>Taxa de dados típica</td><td>1 Gb/s (CAT6)</td><td>10 Gb/s ou mais</td><td>Até 9.6 Gb/s (Wi‑Fi 6)</td></tr>
+              <tr><td>Mobilidade</td><td>❌</td><td>❌</td><td>✅</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----- Seção: Topologias ----- -->
+    <section id="sectionTopologias" class="hidden space-y-8">
+      <div class="flex flex-wrap justify-center gap-4">
+        <button id="btnEstrela"
+                class="px-8 py-4 bg-brown dark:bg-dark-accent text-white font-bold rounded-xl shadow-md hover:bg-brown-dark dark:hover:bg-brown transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sage dark:focus:ring-dark-sage focus:ring-offset-2 text-lg">
+          ⭐ Layout em Estrela
+        </button>
+        <button id="btnBarramento"
+                class="px-8 py-4 bg-white dark:bg-dark-card border-2 border-brown dark:border-dark-accent text-brown dark:text-dark-accent font-bold rounded-xl shadow-md hover:bg-sand dark:hover:bg-dark-border hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sage dark:focus:ring-dark-sage focus:ring-offset-2 text-lg">
+          ➖ Layout em Barramento
+        </button>
+      </div>
+
+      <!-- Painel de detalhes da topologia (agora com SVG) -->
+      <div id="detalhesTopologia" class="hidden fade-in bg-white dark:bg-dark-card rounded-2xl p-6 md:p-8 shadow-lg border-l-4 border-sage dark:border-dark-sage">
+        <div id="conteudoTopologia" class="prose prose-brown dark:text-dark-text max-w-none"></div>
+        <!-- Container para SVG será preenchido via JS -->
+        <div id="svgContainer" class="mt-6 flex justify-center"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== RODAPÉ ========== -->
+  <footer class="text-center text-brown-dark/50 dark:text-dark-text/50 text-sm py-6 border-t border-sand dark:border-dark-border">
+    Guia Visual de Redes para Automação • Conteúdo técnico educacional • Projeto open-source
+  </footer>
+
+  <!-- ========== BOTÃO VOLTAR AO TOPO ========== -->
+  <button id="btnTopo" class="fixed bottom-6 right-6 bg-brown dark:bg-dark-accent text-white p-3 rounded-full shadow-lg opacity-0 pointer-events-none transition-all hover:bg-brown-dark dark:hover:bg-brown z-50" aria-label="Voltar ao topo">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </button>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    (function() {
+      // --- Elementos UI ---
+      const tabCabos = document.getElementById('tabCabos');
+      const tabTopologias = document.getElementById('tabTopologias');
+      const sectionCabos = document.getElementById('sectionCabos');
+      const sectionTopologias = document.getElementById('sectionTopologias');
+      const explicacaoCabo = document.getElementById('explicacaoCabo');
+      const conteudoExplicacaoCabo = document.getElementById('conteudoExplicacaoCabo');
+      const detalhesTopologia = document.getElementById('detalhesTopologia');
+      const conteudoTopologia = document.getElementById('conteudoTopologia');
+      const svgContainer = document.getElementById('svgContainer');
+      const btnEstrela = document.getElementById('btnEstrela');
+      const btnBarramento = document.getElementById('btnBarramento');
+      const btnTopo = document.getElementById('btnTopo');
+      const darkToggle = document.getElementById('darkToggle');
+      const darkIcon = document.getElementById('darkIcon');
+      const darkLabel = document.getElementById('darkLabel');
+
+      // --- Conteúdos textuais (mesmos de antes, com pequenos ajustes) ---
+      const explicacoesCabos = {
+        'par-trancado': `
+          <h4 class="text-xl font-bold text-brown-dark dark:text-dark-accent mb-3">🔌 Cabo de Par Trançado no Chão de Fábrica</h4>
+          <p class="mb-3">O par trançado (cobre) é o meio mais difundido na base das redes industriais, especialmente nas variantes blindadas <strong>STP/FTP</strong> (categorias CAT6, CAT6A ou CAT7). Ele é o suporte físico para protocolos Ethernet industriais como <strong>PROFINET, EtherNet/IP e Modbus TCP</strong>.</p>
+          <p class="mb-3"><strong>Por que é usado:</strong></p>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li><strong>Custo-benefício:</strong> Material e conectores (RJ45 industriais, muitas vezes com proteção IP67) são baratos e fáceis de crimpar em campo.</li>
+            <li><strong>Distância suficiente para células:</strong> Alcança até 100 metros entre switch e dispositivo (PLC, IHM, drive), atendendo a maioria dos layouts de máquinas.</li>
+            <li><strong>Imunidade a ruídos (quando blindado):</strong> A blindagem (STP) protege contra interferências de motores, inversores de frequência e cabos de potência que coexistem nas calhas do chão de fábrica.</li>
+            <li><strong>Alimentação via PoE:</strong> Permite alimentar câmeras, sensores e pontos de acesso sem cabos de energia adicionais (Power over Ethernet).</li>
+          </ul>
+          <p class="text-sm text-brown-dark/70 dark:text-dark-text/70 italic">Limitação: suscetível a interferências eletromagnéticas severas se não houver aterramento correto da blindagem.</p>
+        `,
+        'fibra-optica': `
+          <h4 class="text-xl font-bold text-brown-dark dark:text-dark-accent mb-3">🔦 Fibra Óptica no Chão de Fábrica</h4>
+          <p class="mb-3">A fibra óptica (vidro ou plástico) é a escolha para <strong>backbones industriais</strong> e conexões entre células distantes ou ambientes com extrema poluição eletromagnética. Pode ser monomodo (longas distâncias, laser) ou multimodo (distâncias médias, LED).</p>
+          <p class="mb-3"><strong>Por que é usada:</strong></p>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li><strong>Imunidade total a EMI/RFI:</strong> Não sofre interferência de inversores, fornos de indução, máquinas de solda ou descargas eletrostáticas – perfeita para ambientes agressivos.</li>
+            <li><strong>Longas distâncias:</strong> Liga prédios, galpões ou células distantes centenas de metros ou até quilômetros sem repetidores, algo impossível com cobre.</li>
+            <li><strong>Isolação elétrica:</strong> Evita loops de terra e diferenças de potencial entre equipamentos, protegendo portas Ethernet de surtos.</li>
+            <li><strong>Largura de banda futura:</strong> Suporta as taxas mais altas (1 Gb/s, 10 Gb/s ou mais) exigidas por visão computacional e coleta massiva de dados da Indústria 4.0.</li>
+          </ul>
+          <p class="text-sm text-brown-dark/70 dark:text-dark-text/70 italic">Atenção: requer conversores de mídia ou switches com portas SFP, e o manuseio dos conectores (LC, SC) exige limpeza cuidadosa.</p>
+        `,
+        'wireless': `
+          <h4 class="text-xl font-bold text-brown-dark dark:text-dark-accent mb-3">📡 Redes Wireless no Chão de Fábrica</h4>
+          <p class="mb-3">As comunicações sem fio industriais utilizam principalmente <strong>Wi‑Fi 6 (IEEE 802.11ax)</strong> e, cada vez mais, redes <strong>5G privadas</strong>. São essenciais para dispositivos móveis e áreas de difícil cabeamento.</p>
+          <p class="mb-3"><strong>Por que é usado:</strong></p>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li><strong>Mobilidade:</strong> Permite a comunicação com <strong>AGVs (veículos guiados automaticamente), robôs móveis, coletores de dados e tablets de manutenção</strong> em movimento contínuo.</li>
+            <li><strong>Flexibilidade de layout:</strong> Facilita a reconfiguração de células de produção sem a necessidade de passar novos cabos.</li>
+            <li><strong>Áreas de acesso restrito:</strong> Conecta equipamentos em locais onde o cabeamento físico é impossível ou proibitivo (ex.: braços robóticos rotativos).</li>
+            <li><strong>Redundância e backup:</strong> Atua como link secundário caso o cabo principal se rompa.</li>
+          </ul>
+          <p class="text-sm text-brown-dark/70 dark:text-dark-text/70 italic">Desafios: latência não determinística em Wi‑Fi comum, suscetibilidade a interferências de outras redes e a necessidade de um planejamento de RF criterioso (site survey). O 5G privado resolve parte da latência, mas tem custo elevado.</p>
+        `
+      };
+
+      const detalhesTopologias = {
+        estrela: {
+          texto: `
+            <h4 class="text-xl font-bold text-brown-dark dark:text-dark-accent mb-3">⭐ Topologia Estrela (Ethernet Industrial)</h4>
+            <p class="mb-4">Todos os dispositivos (PLCs, IHMs, drives, sensores) são conectados individualmente a um <strong>switch central</strong>. É a arquitetura dominante nas redes Ethernet industriais modernas.</p>
+            <div class="grid md:grid-cols-2 gap-6 mt-4">
+              <div class="bg-sage/20 dark:bg-dark-sage/20 rounded-xl p-4 border border-sage dark:border-dark-sage">
+                <h5 class="font-bold text-brown-dark dark:text-dark-accent mb-2">✅ Vantagens</h5>
+                <ul class="list-disc pl-5 space-y-2 text-sm">
+                  <li><strong>Isolação de falhas:</strong> um cabo rompido derruba apenas o dispositivo conectado.</li>
+                  <li><strong>Diagnóstico simples:</strong> switches gerenciados identificam a porta com problema.</li>
+                  <li><strong>Desempenho full‑duplex:</strong> banda dedicada sem colisões.</li>
+                  <li><strong>Expansão facilitada:</strong> adicionar equipamentos não interrompe a rede.</li>
+                </ul>
+              </div>
+              <div class="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 border border-red-200 dark:border-red-800">
+                <h5 class="font-bold text-red-800 dark:text-red-400 mb-2">⚠️ Desvantagens</h5>
+                <ul class="list-disc pl-5 space-y-2 text-sm text-red-900 dark:text-red-300">
+                  <li><strong>Custo de cabeamento:</strong> cada dispositivo exige seu próprio cabo.</li>
+                  <li><strong>Switch como ponto crítico:</strong> falha do switch paralisa a célula.</li>
+                  <li><strong>Espaço no painel:</strong> switches com muitas portas ocupam espaço.</li>
+                </ul>
+              </div>
+            </div>
+          `,
+          svg: `<svg viewBox="0 0 300 200" class="w-full max-w-md h-auto">
+                  <circle cx="150" cy="100" r="25" fill="#b7c9a8" stroke="#5e4634" stroke-width="2"/>
+                  <text x="150" y="105" text-anchor="middle" fill="#5e4634" font-size="12">Switch</text>
+                  <!-- Dispositivos ao redor -->
+                  <circle cx="50" cy="40" r="15" fill="#e8d9c8" stroke="#5e4634" stroke-width="2"/>
+                  <text x="50" y="45" text-anchor="middle" fill="#5e4634" font-size="8">PLC</text>
+                  <line x1="130" y1="85" x2="62" y2="48" stroke="#5e4634" stroke-width="2"/>
+                  <circle cx="250" cy="40" r="15" fill="#e8d9c8" stroke="#5e4634" stroke-width="2"/>
+                  <text x="250" y="45" text-anchor="middle" fill="#5e4634" font-size="8">IHM</text>
+                  <line x1="170" y1="85" x2="238" y2="48" stroke="#5e4634" stroke-width="2"/>
+                  <circle cx="50" cy="160" r="15" fill="#e8d9c8" stroke="#5e4634" stroke-width="2"/>
+                  <text x="50" y="165" text-anchor="middle" fill="#5e4634" font-size="8">Drive</text>
+                  <line x1="130" y1="115" x2="62" y2="152" stroke="#5e4634" stroke-width="2"/>
+                  <circle cx="250" cy="160" r="15" fill="#e8d9c8" stroke="#5e4634" stroke-width="2"/>
+                  <text x="250" y="165" text-anchor="middle" fill="#5e4634" font-size="8">Sensor</text>
+                  <line x1="170" y1="115" x2="238" y2="152" stroke="#5e4634" stroke-width="2"/>
+                </svg>`
+        },
+        barramento: {
+          texto: `
+            <h4 class="text-xl font-bold text-brown-dark dark:text-dark-accent mb-3">➖ Topologia Barramento (Redes de Campo Clássicas)</h4>
+            <p class="mb-4">Todos os dispositivos compartilham um único cabo tronco (backbone), com derivações curtas para cada nó. Exemplos típicos: <strong>PROFIBUS, CANopen, DeviceNet, AS‑Interface</strong>.</p>
+            <div class="grid md:grid-cols-2 gap-6 mt-4">
+              <div class="bg-sage/20 dark:bg-dark-sage/20 rounded-xl p-4 border border-sage dark:border-dark-sage">
+                <h5 class="font-bold text-brown-dark dark:text-dark-accent mb-2">✅ Vantagens</h5>
+                <ul class="list-disc pl-5 space-y-2 text-sm">
+                  <li><strong>Menor custo de cabo:</strong> um único par percorre todos os dispositivos.</li>
+                  <li><strong>Simplicidade de instalação:</strong> cabo linear sem painéis complexos.</li>
+                  <li><strong>Alcance estendido:</strong> até 1,2 km com repetidores (PROFIBUS).</li>
+                </ul>
+              </div>
+              <div class="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 border border-red-200 dark:border-red-800">
+                <h5 class="font-bold text-red-800 dark:text-red-400 mb-2">⚠️ Desvantagens</h5>
+                <ul class="list-disc pl-5 space-y-2 text-sm text-red-900 dark:text-red-300">
+                  <li><strong>Ponto único de falha:</strong> rompimento do tronco derruba toda a rede.</li>
+                  <li><strong>Diagnóstico difícil:</strong> falhas intermitentes exigem analisadores.</li>
+                  <li><strong>Desempenho compartilhado:</strong> banda dividida entre todos os nós.</li>
+                  <li><strong>Exige terminadores:</strong> resistores nas pontas para evitar reflexões.</li>
+                </ul>
+              </div>
+            </div>
+          `,
+          svg: `<svg viewBox="0 0 300 120" class="w-full max-w-md h-auto">
+                  <line x1="20" y1="60" x2="280" y2="60" stroke="#5e4634" stroke-width="4"/>
+                  <circle cx="40" cy="60" r="10" fill="#b7c9a8" stroke="#5e4634" stroke-width="2"/>
+                  <text x="40" y="85" text-anchor="middle" fill="#5e4634" font-size="9">PLC</text>
+                  <circle cx="120" cy="60" r="10" fill="#b7c9a8" stroke="#5e4634" stroke-width="2"/>
+                  <text x="120" y="85" text-anchor="middle" fill="#5e4634" font-size="9">IHM</text>
+                  <circle cx="200" cy="60" r="10" fill="#b7c9a8" stroke="#5e4634" stroke-width="2"/>
+                  <text x="200" y="85" text-anchor="middle" fill="#5e4634" font-size="9">Drive</text>
+                  <circle cx="260" cy="60" r="10" fill="#b7c9a8" stroke="#5e4634" stroke-width="2"/>
+                  <text x="260" y="85" text-anchor="middle" fill="#5e4634" font-size="9">Sensor</text>
+                  <!-- Terminadores -->
+                  <rect x="10" y="50" width="10" height="20" fill="#a67c52"/>
+                  <rect x="280" y="50" width="10" height="20" fill="#a67c52"/>
+                </svg>`
+        }
+      };
+
+      // --- Funções de abas ---
+      function ativarAba(aba) {
+        [tabCabos, tabTopologias].forEach(t => {
+          t.classList.remove('tab-active');
+          t.classList.add('tab-inactive');
+          t.setAttribute('aria-selected', 'false');
+        });
+        if (aba === 'cabos') {
+          tabCabos.classList.remove('tab-inactive');
+          tabCabos.classList.add('tab-active');
+          tabCabos.setAttribute('aria-selected', 'true');
+          sectionCabos.classList.remove('hidden');
+          sectionTopologias.classList.add('hidden');
+          detalhesTopologia.classList.add('hidden');
+        } else {
+          tabTopologias.classList.remove('tab-inactive');
+          tabTopologias.classList.add('tab-active');
+          tabTopologias.setAttribute('aria-selected', 'true');
+          sectionTopologias.classList.remove('hidden');
+          sectionCabos.classList.add('hidden');
+          explicacaoCabo.classList.add('hidden');
+        }
+      }
+
+      tabCabos.addEventListener('click', () => ativarAba('cabos'));
+      tabTopologias.addEventListener('click', () => ativarAba('topologias'));
+
+      // --- Cards de cabos ---
+      document.querySelectorAll('[data-cabo]').forEach(card => {
+        card.addEventListener('click', function() {
+          const cabo = this.getAttribute('data-cabo');
+          conteudoExplicacaoCabo.innerHTML = explicacoesCabos[cabo] || '';
+          explicacaoCabo.classList.remove('hidden');
+          explicacaoCabo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        card.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+
+      // --- Botões de topologia ---
+      function mostrarTopologia(tipo) {
+        const dados = detalhesTopologias[tipo];
+        conteudoTopologia.innerHTML = dados.texto;
+        svgContainer.innerHTML = dados.svg;
+        detalhesTopologia.classList.remove('hidden');
+        detalhesTopologia.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      btnEstrela.addEventListener('click', function() {
+        mostrarTopologia('estrela');
+        btnEstrela.classList.add('bg-brown-dark', 'dark:bg-brown', 'text-white');
+        btnEstrela.classList.remove('bg-brown', 'dark:bg-dark-accent');
+        btnBarramento.classList.remove('bg-brown-dark', 'dark:bg-brown', 'text-white');
+        btnBarramento.classList.add('bg-white', 'dark:bg-dark-card', 'text-brown', 'dark:text-dark-accent');
+      });
+
+      btnBarramento.addEventListener('click', function() {
+        mostrarTopologia('barramento');
+        btnBarramento.classList.add('bg-brown-dark', 'dark:bg-brown', 'text-white');
+        btnBarramento.classList.remove('bg-white', 'dark:bg-dark-card', 'text-brown', 'dark:text-dark-accent');
+        btnEstrela.classList.remove('bg-brown-dark', 'dark:bg-brown', 'text-white');
+        btnEstrela.classList.add('bg-brown', 'dark:bg-dark-accent');
+      });
+
+      // --- Botão Voltar ao Topo ---
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+          btnTopo.classList.remove('opacity-0', 'pointer-events-none');
+          btnTopo.classList.add('opacity-100');
+        } else {
+          btnTopo.classList.add('opacity-0', 'pointer-events-none');
+          btnTopo.classList.remove('opacity-100');
+        }
+      });
+      btnTopo.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // --- Dark Mode Toggle ---
+      function setDarkMode(enable) {
+        if (enable) {
+          document.documentElement.classList.add('dark');
+          darkIcon.textContent = '☀️';
+          darkLabel.textContent = 'Modo claro';
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          darkIcon.textContent = '🌙';
+          darkLabel.textContent = 'Modo escuro';
+          localStorage.setItem('theme', 'light');
+        }
+      }
+
+      darkToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        setDarkMode(!isDark);
+      });
+
+      // Verifica preferência salva ou do sistema
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        setDarkMode(true);
+      } else if (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setDarkMode(true);
+      }
+    })();
+  </script>
+</body>
+</html>
